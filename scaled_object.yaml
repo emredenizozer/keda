@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: rmq-scaledobj
+spec:
+  scaleTargetRef:
+     name: nginx-deployment                       # Mandatory. Must be in the same namespace as the ScaledObject
+  pollingInterval:  4                             # Optional. Default: 30 seconds
+  cooldownPeriod:   10                            # Optional. Default: 300 seconds. The amount of time (in seconds) to wait after the last event to scale down the replicas. 
+  idleReplicaCount: 0                             # Optional. Default: ignored, must be less than minReplicaCount 
+  minReplicaCount:  1                             # Optional. Default: 0
+  maxReplicaCount:  10                            # Optional. Default: 100
+  triggers:
+  - type: rabbitmq
+    metadata:
+      host: amqp://guest:guest@rabbitmq.default.svc.cluster.local:5672 # Optional. If not specified, it must be done by using TriggerAuthentication.
+      protocol: auto # Optional. Specifies protocol to use, either amqp or http, or auto to autodetect based on the `host` value. Default value is auto.
+      mode: QueueLength # QueueLength or MessageRate
+      value: "4" # message backlog or publish/sec. target per instance. Target metric value per replica. Here, it's set to 4, meaning that for every 4 messages in the TestQueue, one replica will be spawned, up to maxReplicaCount
+      queueName: TestQueue # The name of the RabbitMQ queue to monitor.
+      unsafeSsl: "true" #  If set to "true", it allows insecure SSL connections. Useful for testing but not recommended for production.
