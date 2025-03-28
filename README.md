@@ -57,14 +57,14 @@ KEDA (Kubernetes Event-Driven Autoscaling) is an open-source project that enable
     helm install rabbitmq --set auth.username=guest --set auth.password=guest bitnami/rabbitmq --wait
     ```
 
-    - Access the RabbitMQ AMQP port:
+    - Access to the RabbitMQ AMQP port:
 
         ```sh
         kubectl port-forward --namespace default svc/rabbitmq 5672:5672
         ```
 
-    - Access the RabbitMQ management interface:
+    - Access to the RabbitMQ Management interface:
 
         ```sh
-        kubectl port-forward --namespace default svc/rabbitmq 15672:15672
+        kubectl port-forward --namespace default svc/rabbitmq 5672:5672
         ```
